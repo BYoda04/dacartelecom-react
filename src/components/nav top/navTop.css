@@ -1,0 +1,56 @@
+
+.nav-top{
+    width: 100%;
+    margin: 0;
+    padding: 1em;
+    background: #0d6efd;
+}
+
+.nav-top__container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-top__img{
+    width: 13em;
+}
+
+.nav-top__img img{
+    max-width: 100%;
+}
+
+.nav-top__options{
+    margin-right: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-top__login button{
+    --bs-btn-padding-x: 1.5rem;
+    --bs-btn-padding-y: .3rem;
+    --bs-btn-border-radius: 1.5em;
+    font-size: .85rem;
+    font-weight: 400;
+    letter-spacing: .2rem;
+}
+
+.nav-top__login div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-top__login ion-icon{
+    font-size: 1.5em;
+}
+
+.nav-top__campaign button, .nav-top__section button{
+    --bs-btn-padding-y: .3rem;
+    --bs-btn-border-radius: 1.5em;
+    font-size: .85rem;
+    font-weight: 400;
+    letter-spacing: .1rem;
+}
