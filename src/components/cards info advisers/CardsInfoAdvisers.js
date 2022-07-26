@@ -1,25 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import TableAdvisers from '../table advisers/TableAdvisers';
-import { useSelector } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import axios from 'axios';
+import { setSelectSection } from '../../store/slices/sectionSelect';
+import { setUgi } from '../../store/slices/ugiVisible.slice';
 
 const CardsInfoAdvisers = () => {
 
     const section = useSelector(state=>state.section);
     const [advisers,setAdvisers] = useState([]);
+    const [sectionUser] = useState(localStorage.getItem("section"));
+    const dispatch = useDispatch();
 
     useEffect(()=>{
-        const getAdvisers = async ()=>{
-            try {
-                const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/advisers/get/query?sectionId=${section?.id}`);
-                setAdvisers(data.data.advisers);
-            } catch (error) {
-                console.log(error.response.data);
+        if (sectionUser) {
+            const getAdvisers = async ()=>{
+                try {
+                    const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/advisers/get/query?sectionId=${sectionUser}`);
+                    const sect = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/sections/byid/${sectionUser}`);
+                    dispatch(setSelectSection(sect.data.data));
+                    sect.data.data.name.toLowerCase() === 'hogar'? dispatch(setUgi(true)) : dispatch(setUgi(false))
+                    setAdvisers(data.data.advisers);
+                } catch (error) {
+                    console.log(error.response.data);
+                };
             };
+            
+            getAdvisers();
+        } else {
+            const getAdvisers = async ()=>{
+                try {
+                    const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/advisers/get/query?sectionId=${section?.id}`);
+                    setAdvisers(data.data.advisers);
+                } catch (error) {
+                    console.log(error.response.data);
+                };
+            };
+            
+            getAdvisers();
         };
-
-        getAdvisers();
-    },[section]);
+    },[dispatch,sectionUser,section?.id]);
 
     return (
         <div className='cards-info'>

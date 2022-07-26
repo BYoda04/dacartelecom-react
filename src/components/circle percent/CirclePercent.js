@@ -1,6 +1,41 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-const CirclePercent = ({radio,color,percent,size = 1}) => {
+const CirclePercent = ({radio,color,percent = 0,size = 1,product,goal}) => {
+
+    const day = new Date().getDate();
+    let month = new Date().getMonth()+1;
+    const year = new Date().getFullYear();
+    let total = 0;
+    let newPercent = 0;
+    
+    if (month<10) {
+        month = `0${month}`;
+    };
+
+    const [solds,setSolds] = useState([]);
+
+    useEffect(()=>{
+        if (product) {
+            const getData = async ()=>{
+                try {
+                    const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${year}-${month}-${day}&productId=${product.id}`);
+                    setSolds(data.data.sales);
+                } catch (error) {
+                    console.log(error.response.data);
+                }
+            }
+
+            getData();
+        }
+    },[product,day,month,year]);
+
+    if (solds.length) {
+        solds.map(sold=>{
+            total += sold.sold;
+            return newPercent = ((total/goal)*100).toFixed(2);
+        });
+    };
 
     return (
         <div className='circle-percent'>
@@ -29,7 +64,7 @@ const CirclePercent = ({radio,color,percent,size = 1}) => {
                                     }}></circle>
                             </svg>
                             <div className="number">
-                                <h2 style={{fontSize:`${size}em`}}>{percent}<span>%</span></h2>
+                                <h2 style={{fontSize:`${size}em`}}>{ percent ? percent : newPercent }<span>%</span></h2>
                             </div>
                         </div>
                     </div>
