@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import ProductsSolds from '../porducts solds/ProductsSolds';
-import TotalSolds from '../porducts solds/TotalSolds';
-import UgiSolds from '../porducts solds/UgiSolds';
+import ProductsSolds from './porducts-solds/ProductsSolds';
+import TotalSolds from './porducts-solds/TotalSolds';
+import UgiSolds from './porducts-solds/UgiSolds';
 
 const TableAdvisers = ({adviser,products}) => {
 

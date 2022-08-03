@@ -1,6 +1,7 @@
 .nav-left__body{
     background: #0d6efd;
     width: 4vw;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -16,11 +17,16 @@
 }
 
 .nav-left__section{
+    color: #000;
     font-size: 2em;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+.nav-left__section :hover{
+    color: #aaa;
 }
 
 .nav-left__section ion-icon{

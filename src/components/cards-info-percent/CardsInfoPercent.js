@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import CirclePercent from '../circle percent/CirclePercent';
+import CirclePercent from './circle-percent/CirclePercent';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const CardsInfoPercent = () => {
 
-  const colors = ["#f5641b","#c127e5","#f11e3e"];
+  //const colors = ["#f5641b","#c127e5","#f11e3e"];
   const day = new Date().getDate();
   let month = new Date().getMonth()+1;
   const year = new Date().getFullYear();
@@ -17,7 +17,7 @@ const CardsInfoPercent = () => {
       month = `0${month}`;
   };
 
-  const section = useSelector(state=>state.section);
+  const section = 1;
   const ugiVisible = useSelector(state=>state.ugiVisible);
   const [solds,setSolds] = useState([]);
   const [goals,setGoals] = useState([]);
@@ -40,7 +40,7 @@ const CardsInfoPercent = () => {
 
       getData();
     };
-  },[section]);
+  },[section,day,month,year]);
 
   if (solds.length) {
     solds.map(sold=>{

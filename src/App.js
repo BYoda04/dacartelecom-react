@@ -1,23 +1,25 @@
 import './App.css';
 import './styles/home.css';
-import './components/nav top/navTop.css';
-import './components/table sales/tableSales.css';
-import './components/circle percent/circlePercent.css';
-import './components/cards info percent/cardsInfoPercent.css';
-import './components/cards info advisers/cardsInfoAdvisers.css';
-import './components/nav left/navLeft.css';
-import './components/table advisers/tableAdviser.css';
+import './styles/login.css';
+import './components/nav-top/navTop.css';
+import './components/table-sales/tableSales.css';
+import './components/cards-info-percent/cardsInfoPercent.css';
+import './components/cards-info-percent/circle-percent/circlePercent.css';
+import './components/cards-info-advisers/cardsInfoAdvisers.css';
+import './components/cards-info-advisers/table-advisers/tableAdviser.css';
+import './components/nav-left/navLeft.css';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
 import Home from './pages/Home';
-import NavTop from './components/nav top/NavTop';
-import NavLeft from './components/nav left/NavLeft';
-import { useDispatch, useSelector } from 'react-redux';
+import ProtectedRoutes from './components/ProtectedRoutes';
+import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { loggin } from './store/slices/loged.slice';
+import Input from './pages/Input';
+import Files from './pages/Files';
 
 function App() {
 
-  const loged = useSelector(state=>state.loged);
   const dispatch = useDispatch();
   const [token] = useState(localStorage.getItem("token"));
 
@@ -27,21 +29,20 @@ function App() {
 
   return (
     <HashRouter>
-      <div>
-        <NavTop />
         <div className='body-page'>
-          { loged ?
-          <NavLeft />
-          :
-          <></> }
 
-          <Routes>
+            <Routes>
 
-            <Route path='/' element={<Home />}/>
+              <Route path='/' element={<Login />}/>
 
-          </Routes>
+                  <Route element={<ProtectedRoutes />}>
+                    <Route path='/home' element={<Home />}/>
+                    <Route path='/input' element={<Input />}/>
+                    <Route path='/files' element={<Files />}/>
+                  </Route>
+
+            </Routes>
         </div>
-      </div>
     </HashRouter>
   );
 }

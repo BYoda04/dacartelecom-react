@@ -28,15 +28,6 @@
     gap: 2rem;
 }
 
-.nav-top__login button,.nav-top__logout button{
-    --bs-btn-padding-x: 1.5rem;
-    --bs-btn-padding-y: .3rem;
-    --bs-btn-border-radius: 1.5em;
-    font-size: .85rem;
-    font-weight: 400;
-    letter-spacing: .2rem;
-}
-
 .nav-top__login div,.nav-top__logout div{
     display: flex;
     align-items: center;
@@ -45,14 +36,6 @@
 
 .nav-top__login ion-icon,.nav-top__logout ion-icon{
     font-size: 1.5em;
-}
-
-.nav-top__campaign button, .nav-top__section button, .modal-footer button{
-    --bs-btn-padding-y: .3rem;
-    --bs-btn-border-radius: 1.5em;
-    font-size: .85rem;
-    font-weight: 400;
-    letter-spacing: .1rem;
 }
 
 .nav-top__user{

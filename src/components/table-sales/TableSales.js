@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import TableRow from "../table row/TableRow";
+import TableRow from "./table-row/TableRow";
 
 const TableSales = () => {
     const sections = useSelector(state=>state.sections);

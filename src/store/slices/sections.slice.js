@@ -4,12 +4,12 @@ export const sectionsSlice = createSlice({
     name: 'sections',
     initialState: [],
     reducers: {
-        setSectionsRedux: (state,action)=>{
+        setSections: (state,action)=>{
             return action.payload
         }
     }
 })
 
-export const { setSectionsRedux } = sectionsSlice.actions;
+export const { setSections } = sectionsSlice.actions;
 
 export default sectionsSlice.reducer;

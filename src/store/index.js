@@ -1,16 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
+import role from './slices/role.slice';
 import campaigns from './slices/campaigns.slice';
-import ugiVisible from './slices/ugiVisible.slice';
 import sections from './slices/sections.slice';
-import section from './slices/sectionSelect';
+import advisers from './slices/advisers.slice';
+import products from './slices/products.slice';
+import solds from './slices/solds.slice';
+import ugiVisible from './slices/ugiVisible.slice';
 import loged from './slices/loged.slice';
 
 export default configureStore({
   reducer: {
+    role,
     campaigns,
-    ugiVisible,
     sections,
-    section,
+    advisers,
+    products,
+    solds,
+    ugiVisible,
     loged,
 	}
 });

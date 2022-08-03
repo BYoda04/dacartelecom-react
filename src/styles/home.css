@@ -6,6 +6,10 @@
     background: #202530;
 }
 
+.home-container{
+    left: -.5rem;
+}
+
 .table-sales{
     margin-top: 2rem;
 }

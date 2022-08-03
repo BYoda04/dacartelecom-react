@@ -5,7 +5,7 @@
   position: relative;
   padding: 0;
   margin: 0;
-  left: .05em;
+  left: .05rem;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
 }
@@ -24,16 +24,35 @@ body::-webkit-scrollbar-thumb{
   background: #c1c1c1;
 }
 
+button{
+  --bs-btn-padding-y: .3rem !important;
+  --bs-btn-border-radius: .5em !important;
+  font-size: .85rem !important;
+  font-weight: 400 !important;
+  letter-spacing: .1rem;
+}
+
 .bad{
-  border: 1px solid red;
+  border: 2px solid #b32121;
 }
 
 .body-page{
   box-sizing: border-box;
-  width: 100%;
+  min-width: 100vw;
+  min-height: 100vh;
   padding: 0;
   margin: 0;
   display: flex;
+  left: -.0rem;
+}
+
+.page-container{
+  min-width: 100%;
+}
+
+.body-pages-container{
+  display: flex;
+  min-width: 100vw;
   left: -.0rem;
 }
 
