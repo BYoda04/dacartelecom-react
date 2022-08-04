@@ -1,15 +1,18 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Dacar from '../../img/dacartelecom-logo.webp';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Dacar from '../../img/dacartelecom-logo.webp';
 import { setRole } from '../../store/slices/role.slice';
 import { setCampaigns } from '../../store/slices/campaigns.slice';
 import { setSections } from '../../store/slices/sections.slice';
 import { setAdvisers } from '../../store/slices/advisers.slice';
 import { setProducts } from '../../store/slices/products.slice';
 import { setSolds } from '../../store/slices/solds.slice';
+import { setGoals } from '../../store/slices/goals.slice';
 import { setUgi } from '../../store/slices/ugiVisible.slice';
+import { setSectionSelect } from '../../store/slices/sectionSelect.slice';
+import { setDates } from '../../store/slices/date.slice';
 import { loggin } from '../../store/slices/loged.slice';
 import getConfig from '../../utils/getConfig';
 
@@ -39,19 +42,26 @@ const NavTop = () => {
     const getSolds =async (date,section)=>{
         try {
             const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
+            const goals = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
             const advisers = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/users/get/querys?roleId=5&sectionId=${section}`,getConfig());
-            dispatch(setAdvisers(advisers.data.users));
             dispatch(setSolds(solds.data.sales));
+            dispatch(setGoals(goals.data.goals));
+            dispatch(setAdvisers(advisers.data.users));
         } catch (error) {
             dispatch(setSolds([]));
+            dispatch(setAdvisers([]));
             console.log(error.response.data);
         };
     };
 
-    const getSoldsUser =async (date,user)=>{
+    const getSoldsUser =async (date,user,section)=>{
         try {
             const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date}&userId=${user}`,getConfig());
+            const goals = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
+            const adviser = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/users/${user}`,getConfig());
             dispatch(setSolds(solds.data.sales));
+            dispatch(setGoals(goals.data.goals));
+            dispatch(setAdvisers([adviser.data.user]));
         } catch (error) {
             dispatch(setSolds([]));
             console.log(error.response.data);
@@ -61,17 +71,21 @@ const NavTop = () => {
     const getSoldsEnd =async (start,end,section)=>{
         try {
             const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&finishDate=${end}&sectionId=${section}`,getConfig());
+            const goals = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&finishDate=${end}&sectionId=${section}`,getConfig());
             dispatch(setSolds(solds.data.sales));
+            dispatch(setGoals(goals.data.goals));
         } catch (error) {
             dispatch(setSolds([]));
             console.log(error.response.data);
         };
     };
 
-    const getSoldsEndUser =async (start,end,user)=>{
+    const getSoldsEndUser =async (start,end,user,section)=>{
         try {
             const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&finishDate=${end}&userId=${user}`,getConfig());
+            const goals = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&finishDate=${end}&sectionId=${section}`,getConfig());
             dispatch(setSolds(solds.data.sales));
+            dispatch(setGoals(goals.data.goals));
         } catch (error) {
             dispatch(setSolds([]))
             console.log(error.response.data);
@@ -80,11 +94,42 @@ const NavTop = () => {
 
     useEffect(()=>{
         dispatch(setRole(localStorage.getItem("role")));
+        dispatch(setDates({
+            startDate: date,
+            endDate: ''
+        }));
         if (!localStorage.getItem("campaign")) {
+            const date = `${year}-${month}-${day}`;
             const getCampaigns =async ()=>{
                 try {
                     const res = await axios.get("https://api-dacartelecom.herokuapp.com/api/v1/campaigns",getConfig());
                     dispatch(setCampaigns(res.data.data));
+                    dispatch(setSections(res.data.data[0]?.sections));
+                    dispatch(setProducts(res.data.data[0]?.sections[0]?.products));
+                    dispatch(setSectionSelect(res.data.data[0]?.sections[0]));
+                    setSelectCamp(res.data.data[0]?.name);
+                    setSelectSect(res.data.data[0]?.sections[0]);
+                    res.data.data[0]?.sections[0]?.name?.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
+
+                    const getSolds =async (date,section)=>{
+                        try {
+                            const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
+                            const goals = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
+                            const advisers = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/users/get/querys?roleId=5&sectionId=${section}`,getConfig());
+                            dispatch(setAdvisers(advisers.data.users));
+                            dispatch(setGoals(goals.data.goals));
+                            dispatch(setSolds(solds.data.sales));
+                        } catch (error) {
+                            console.log(error.response.data);
+                            if (error.response.data.message === 'jwt expired') {
+                                localStorage.clear();
+                                dispatch(loggin(false));
+                                navigate("/");
+                            };
+                        };
+                    };
+
+                    getSolds(date,res.data.data[0]?.sections[0]?.id);
                 } catch (error) {
                     console.log(error.response.data);
                     if (error.response.data.message === 'jwt expired') {
@@ -94,7 +139,7 @@ const NavTop = () => {
                     };
                 };
             };
-
+            
             getCampaigns();
         } else {
             const date = `${year}-${month}-${day}`;
@@ -104,6 +149,7 @@ const NavTop = () => {
                     const resSect = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/sections/${localStorage.getItem("section")}`,getConfig());
                     dispatch(setCampaigns([resCamp.data.campaign]));
                     dispatch(setSections([resSect.data.section]));
+                    dispatch(setSectionSelect(resSect.data.section));
                     dispatch(setProducts(resSect.data.section.products));
                     setSelectSect(resSect.data.section);
                     resSect.data.section.name.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
@@ -112,8 +158,10 @@ const NavTop = () => {
                         const getSolds =async (date,section)=>{
                             try {
                                 const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
+                                const goals = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
                                 const advisers = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/users/get/querys?roleId=5&sectionId=${localStorage.getItem("section")}`,getConfig());
                                 dispatch(setSolds(solds.data.sales));
+                                dispatch(setGoals(goals.data.goals));
                                 dispatch(setAdvisers(advisers.data.users));
                             } catch (error) {
                                 console.log(error.response.data);
@@ -123,17 +171,21 @@ const NavTop = () => {
                         getSolds(date,resSect.data.section.id);
                     } else {
 
-                        const getSoldsUser =async (date,user)=>{
+                        const getSoldsUser =async (date,user,section)=>{
                             try {
                                 const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date}&userId=${user}`,getConfig());
+                                const goals = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
+                                const adviser = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/users/${user}`,getConfig());
                                 dispatch(setSolds(solds.data.sales));
+                                dispatch(setGoals(goals.data.goals));
+                                dispatch(setAdvisers([adviser.data.user]));
                             } catch (error) {
                                 dispatch(setSolds([]));
                                 console.log(error.response.data);
                             };
                         };
                         
-                        getSoldsUser(date,localStorage.getItem("id"));
+                        getSoldsUser(date,localStorage.getItem("id"),localStorage.getItem("section"));
                     };
                 } catch (error) {
                     console.log(error.response.data);
@@ -147,41 +199,13 @@ const NavTop = () => {
 
             getArea();
         };
-    },[dispatch,day,month,year,navigate]);
-    
-    useEffect(()=>{
-        const date = `${year}-${month}-${day}`;
-        if (!localStorage.getItem("campaign")) {
-
-            const getSolds =async (date,section)=>{
-                try {
-                    const solds = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
-                    const advisers = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/users/get/querys?roleId=5&sectionId=${section}`,getConfig());
-                    dispatch(setAdvisers(advisers.data.users));
-                    dispatch(setSolds(solds.data.sales));
-                } catch (error) {
-                    console.log(error.response.data);
-                    if (error.response.data.message === 'jwt expired') {
-                        localStorage.clear();
-                        dispatch(loggin(false));
-                        navigate("/");
-                    };
-                };
-            };
-
-            dispatch(setSections(campaigns[0]?.sections));
-            dispatch(setProducts(campaigns[0]?.sections[0]?.products));
-            setSelectCamp(campaigns[0]?.name);
-            setSelectSect(campaigns[0]?.sections[0]);
-            campaigns[0]?.sections[0]?.name?.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
-            getSolds(date,campaigns[0]?.sections[0]?.id);
-        }
-    },[campaigns,dispatch,day,month,year,navigate]);
+    },[dispatch,day,month,year,date,navigate]);
 
     const setCampaign = camp=>{
         const date = `${year}-${month}-${day}`;
         dispatch(setSections(camp.sections));
         dispatch(setProducts(camp.sections[0].products));
+        dispatch(setSectionSelect(camp.sections[0]));
         setSelectCamp(camp.name);
         setSelectSect(camp.sections[0]);
         camp.sections[0].name.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
@@ -190,7 +214,8 @@ const NavTop = () => {
 
     const setSect = sect=>{
         const date = `${year}-${month}-${day}`;
-        dispatch(setProducts(sect.products));  
+        dispatch(setProducts(sect.products));
+        dispatch(setSectionSelect(sect));
         setSelectSect(sect);
         sect.name.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
         getSolds(date,sect.id);
@@ -198,21 +223,37 @@ const NavTop = () => {
 
     const startDate = date=>{
         if (localStorage.getItem("role") !== 'asesor') {
+            dispatch(setDates({
+                startDate: date,
+                endDate: ''
+            }));
             setDate(date);
             getSolds(date,selectSect.id);
         } else {
+            dispatch(setDates({
+                startDate: date,
+                endDate: ''
+            }));
             setDate(date);
-            getSoldsUser(date,localStorage.getItem("id"));
+            getSoldsUser(date,localStorage.getItem("id"),localStorage.getItem("section"));
         };
     };
 
     const endDate = (end)=>{
         if (localStorage.getItem("role") !== 'asesor') {
             const start = document.getElementById('startDate');
+            dispatch(setDates({
+                startDate: start.value,
+                endDate: end
+            }));
             getSoldsEnd(start.value,end,selectSect.id);
         } else {
             const start = document.getElementById('startDate');
-            getSoldsEndUser(start.value,end,localStorage.getItem("id"));
+            dispatch(setDates({
+                startDate: start.value,
+                endDate: end
+            }));
+            getSoldsEndUser(start.value,end,localStorage.getItem("id"),localStorage.getItem("section"));
         };
     }
 

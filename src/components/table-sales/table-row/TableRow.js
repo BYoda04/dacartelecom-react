@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import getConfig from '../../../utils/getConfig';
 
 const TableRow = ({section,name='campañas',body=false}) => {
 
@@ -51,7 +52,7 @@ const TableRow = ({section,name='campañas',body=false}) => {
         if (section) {
             const getSales = async ()=>{
                 try {
-                    const sales = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${year}-${month}-${day}&sectionId=${section.id}`);
+                    const sales = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${year}-${month}-${day}&sectionId=${section.id}`,getConfig());
 
                     setListSales(sales.data.sales);
                 } catch (error) {
@@ -61,7 +62,7 @@ const TableRow = ({section,name='campañas',body=false}) => {
 
             getSales();
         }
-    },[section]);
+    },[section,day,month,year]);
 
     if (listSales.length) {
         listSales.map(sale=>{
@@ -110,7 +111,7 @@ const TableRow = ({section,name='campañas',body=false}) => {
                 soldTenPM += sale.sold;
             };
 
-            total += sale.sold;
+            return total += sale.sold;
         });
     };
 

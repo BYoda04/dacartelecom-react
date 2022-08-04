@@ -31,8 +31,28 @@
     z-index: 1000;
 }
 
-.percent:nth-child(1){
+.percent-products div:nth-child(1) .percent{
     background: #f5641b;
+}
+
+.percent-products div:nth-child(1) .percent svg circle:nth-child(2){
+    stroke: #f5641b;
+}
+
+.percent-products div:nth-child(2) .percent{
+    background: #c127e5;
+}
+
+.percent-products div:nth-child(2) .percent svg circle:nth-child(2){
+    stroke: #c127e5;
+}
+
+.percent-products div:nth-child(3) .percent{
+    background: #f11e3e;
+}
+
+.percent-products div:nth-child(3) .percent svg circle:nth-child(2){
+    stroke: #f11e3e;
 }
 
 .percent .number{

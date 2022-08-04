@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
 import { loggin } from '../store/slices/loged.slice';
 import { setRole } from '../store/slices/role.slice';
+import { setIfCampaign } from '../store/slices/ifCampaign.slice';
+import { setIfAdviser } from '../store/slices/ifAdviser.slice';
 
 const Login = () => {
 
@@ -28,8 +30,12 @@ const Login = () => {
             localStorage.setItem("token",response.data.token);
             localStorage.setItem("role",response.data.role);
             dispatch(setRole(response.data.role));
+            if (response.data.role === 'asesor') {
+                dispatch(setIfAdviser(true));
+            }
             if (response.data.campaign) {
                 localStorage.setItem("campaign",response.data.campaign);
+                dispatch(setIfCampaign(true));
             };
             if (response.data.section) {
                 localStorage.setItem("section",response.data.section);

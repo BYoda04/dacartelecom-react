@@ -19,7 +19,8 @@ const TableAdvisers = ({adviser,products}) => {
             <TotalSolds adviser={adviser}/>
             {
                 ugiVisible ? 
-                <UgiSolds adviser={adviser}/> : 
+                <UgiSolds adviser={adviser}/> 
+                : 
                 <></>
             }
         </div>
