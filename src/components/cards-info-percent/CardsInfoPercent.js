@@ -1,5 +1,6 @@
 import React from 'react';
 import CirclePercent from './circle-percent/CirclePercent';
+import Investments from './investments/Investments';
 import { useSelector } from 'react-redux';
 
 const CardsInfoPercent = () => {
@@ -9,6 +10,7 @@ const CardsInfoPercent = () => {
   let ugi = 0;
   let percent = 0;
 
+  const role = useSelector(state=>state.role);
   const products = useSelector(state=>state.products);
   const solds = useSelector(state=>state.solds);
   const goals = useSelector(state=>state.goals);
@@ -48,6 +50,14 @@ const CardsInfoPercent = () => {
                   <p>{ product?.name }</p>
                 </div>
               )) }
+            </div>
+            <div className='investment'>
+              {
+                role !== 'asesor' ?
+                  <Investments />
+                :
+                  <></>
+              }
             </div>
           </div>
     );

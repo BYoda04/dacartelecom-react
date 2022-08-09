@@ -17,7 +17,11 @@ const Login = () => {
 
     useEffect(()=>{
         if (loged) {
-            navigate("/home");
+            if (localStorage.getItem("role") !== 'contador') {
+                navigate("/home");
+            } else {
+                navigate("/files");
+            };
         };
     },[loged,navigate]);
 
@@ -36,8 +40,12 @@ const Login = () => {
             };
             setErrorUser(false);
             setErrorPassword(false);
-            dispatch(loggin(true))
-            navigate("/home");
+            dispatch(loggin(true));
+            if (response.data.role !== 'contador') {
+                navigate("/home");
+            } else {
+                navigate("/files")
+            }
         } catch (error) {
             console.log(error.response.data);
             if (error.response.data.message === 'Invalid password') {

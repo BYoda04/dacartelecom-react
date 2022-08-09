@@ -1,7 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import Create from '../components/create/Create';
 import NavLeft from '../components/nav-left/NavLeft';
 import NavTop from '../components/nav-top/NavTop';
+import Reloj from '../components/reloj/Reloj';
 
 const Input = () => {
     
@@ -18,7 +20,10 @@ const Input = () => {
               <></>
             }
             <div className='input'>
-                input 
+                <div className='input-container'>
+                    <Reloj />
+                    <Create />
+                </div>
             </div>
           </div>
         </div>

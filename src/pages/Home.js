@@ -5,6 +5,7 @@ import TableSales from '../components/table-sales/TableSales';
 import { useSelector } from 'react-redux';
 import NavLeft from '../components/nav-left/NavLeft';
 import NavTop from '../components/nav-top/NavTop';
+import Reloj from '../components/reloj/Reloj';
 
 const Home = () => {
 
@@ -22,6 +23,7 @@ const Home = () => {
           }
           <div className='home'>
             <div className='home-container'>
+              <Reloj />
               { 
               role !== 'viewer' ? 
               <></>

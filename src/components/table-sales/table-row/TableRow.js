@@ -1,32 +1,30 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import getConfig from '../../../utils/getConfig';
 
 const TableRow = ({section,name='campañas',body=false}) => {
 
+    const date = useSelector(state=>state.date);
     const [listSales,setListSales] = useState([]);
-
-    const day = new Date().getDate();
-    let month = new Date().getMonth()+1;
-    const year = new Date().getFullYear();
 
     let total = 0
 
     //hours
-    const nineAM = new Date(`${year}-${month}-${day} 04:00`).getTime();
-    const tenAM = new Date(`${year}-${month}-${day} 05:00`).getTime();
-    const elevenAM = new Date(`${year}-${month}-${day} 06:00`).getTime();
-    const twelveAM = new Date(`${year}-${month}-${day} 07:00`).getTime();
-    const onePM = new Date(`${year}-${month}-${day} 08:00`).getTime();
-    const twoPM = new Date(`${year}-${month}-${day} 09:00`).getTime();
-    const trheePM = new Date(`${year}-${month}-${day} 10:00`).getTime();
-    const fourPM = new Date(`${year}-${month}-${day} 11:00`).getTime();
-    const fivePM = new Date(`${year}-${month}-${day} 12:00`).getTime();
-    const sixPM = new Date(`${year}-${month}-${day} 13:00`).getTime();
-    const sevenPM = new Date(`${year}-${month}-${day} 14:00`).getTime();
-    const eigthPM = new Date(`${year}-${month}-${day} 15:00`).getTime();
-    const ninePM = new Date(`${year}-${month}-${day} 16:00`).getTime();
-    const tenPM = new Date(`${year}-${month}-${day} 17:00`).getTime();
+    const nineAM = new Date(`${date?.startDate} 04:00`).getTime();
+    const tenAM = new Date(`${date?.startDate} 05:00`).getTime();
+    const elevenAM = new Date(`${date?.startDate} 06:00`).getTime();
+    const twelveAM = new Date(`${date?.startDate} 07:00`).getTime();
+    const onePM = new Date(`${date?.startDate} 08:00`).getTime();
+    const twoPM = new Date(`${date?.startDate} 09:00`).getTime();
+    const trheePM = new Date(`${date?.startDate} 10:00`).getTime();
+    const fourPM = new Date(`${date?.startDate} 11:00`).getTime();
+    const fivePM = new Date(`${date?.startDate} 12:00`).getTime();
+    const sixPM = new Date(`${date?.startDate} 13:00`).getTime();
+    const sevenPM = new Date(`${date?.startDate} 14:00`).getTime();
+    const eigthPM = new Date(`${date?.startDate} 15:00`).getTime();
+    const ninePM = new Date(`${date?.startDate} 16:00`).getTime();
+    const tenPM = new Date(`${date?.startDate} 17:00`).getTime();
 
     //solds
     let soldNineAM = 0;
@@ -44,15 +42,11 @@ const TableRow = ({section,name='campañas',body=false}) => {
     let soldNinePM = 0;
     let soldTenPM = 0;
 
-    if (month<10) {
-        month = `0${month}`;
-    };
-
     useEffect(()=>{
         if (section) {
             const getSales = async ()=>{
                 try {
-                    const sales = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${year}-${month}-${day}&sectionId=${section.id}`,getConfig());
+                    const sales = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&sectionId=${section.id}`,getConfig());
 
                     setListSales(sales.data.sales);
                 } catch (error) {
@@ -62,7 +56,7 @@ const TableRow = ({section,name='campañas',body=false}) => {
 
             getSales();
         }
-    },[section,day,month,year]);
+    },[section,date?.startDate]);
 
     if (listSales.length) {
         listSales.map(sale=>{
