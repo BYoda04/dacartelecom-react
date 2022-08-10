@@ -14,6 +14,10 @@ import date from './slices/date.slice';
 import loged from './slices/loged.slice';
 import location from './slices/location.slice';
 import successOrError from './slices/successOrError.slice';
+import documents from './slices/documents.slice';
+import sharedDocuments from './slices/sharedDocuments.slice';
+import pagination from './slices/pagination.slice';
+import isLoadding from './slices/isLoadding.slice';
 
 export default configureStore({
   reducer: {
@@ -32,5 +36,9 @@ export default configureStore({
     loged,
     location,
     successOrError,
+    documents,
+    sharedDocuments,
+    pagination,
+    isLoadding,
 	}
 });

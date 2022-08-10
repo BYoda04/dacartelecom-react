@@ -18,6 +18,9 @@ import { loggin } from '../../store/slices/loged.slice';
 import getConfig from '../../utils/getConfig';
 import { setRoles } from '../../store/slices/roles.slice';
 import { setLocation } from '../../store/slices/location.slice';
+import { setDocuments } from '../../store/slices/documents.slice';
+import { setIsLoadding } from '../../store/slices/isLoadding.slice';
+import { setSharedDocuments } from '../../store/slices/sharedDocuments.slice';
 
 const NavTop = () => {
 
@@ -37,6 +40,7 @@ const NavTop = () => {
     const campaigns = useSelector(state=>state.campaigns);
     const sections = useSelector(state=>state.sections);
     const location = useSelector(state=>state.location);
+    const pagination = useSelector(state=>state.pagination);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectCamp,setSelectCamp] = useState('campaigns');
@@ -88,6 +92,34 @@ const NavTop = () => {
                 navigate("/");
             };
         };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files?offSet=${pagination}&limit=10`,getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
+        };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setSharedDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
+        };
     };
 
     const getSoldsUser =async (date,user,section)=>{
@@ -115,6 +147,34 @@ const NavTop = () => {
         } catch (error) {
             console.log(error.response.data);
         };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files?offSet=${pagination}&limit=10`,getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
+        };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setSharedDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
+        };
     };
 
     const getSoldsEnd =async (start,end,section)=>{
@@ -135,6 +195,34 @@ const NavTop = () => {
             dispatch(setInvestments(investments.data.investments));
         } catch (error) {
             console.log(error.response.data);
+        };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files?offSet=${pagination}&limit=10`,getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
+        };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setSharedDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
         };
     };
 
@@ -157,6 +245,34 @@ const NavTop = () => {
         } catch (error) {
             console.log(error.response.data);
         };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files?offSet=${pagination}&limit=10`,getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
+        };
+        try {
+            dispatch(setIsLoadding(true));
+            const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
+            dispatch(setIsLoadding(false));
+            dispatch(setSharedDocuments(documents.data.data));
+        } catch (error) {
+            dispatch(setIsLoadding(false));
+            console.log(error.response.data);
+            if (error.response.data.message === 'jwt expired') {
+                localStorage.clear();
+                dispatch(loggin(false));
+                navigate("/");
+            };
+        };
     };
 
     useEffect(()=>{
@@ -165,8 +281,8 @@ const NavTop = () => {
             startDate: date,
             endDate: ''
         }));
-
-        if (localStorage.getItem("role") === 'administrador') {
+        if (!localStorage.getItem("campaign")) {
+            const date = `${year}-${month}-${day}`;
             const getRoles = async ()=>{
                 try {
                     const res = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/roles',getConfig());
@@ -177,9 +293,6 @@ const NavTop = () => {
             };
 
             getRoles();
-        };
-        if (!localStorage.getItem("campaign")) {
-            const date = `${year}-${month}-${day}`;
             const getCampaigns =async ()=>{
                 try {
                     const res = await axios.get("https://api-dacartelecom.herokuapp.com/api/v1/campaigns",getConfig());
@@ -220,6 +333,34 @@ const NavTop = () => {
                             const investments = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/investments/get/querys?startDate=${date}&sectionId=${section}`,getConfig());
                             dispatch(setInvestments(investments.data.investments));
                         } catch (error) {
+                            console.log(error.response.data);
+                            if (error.response.data.message === 'jwt expired') {
+                                localStorage.clear();
+                                dispatch(loggin(false));
+                                navigate("/");
+                            };
+                        };
+                        try {
+                            dispatch(setIsLoadding(true));
+                            const documents = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files?offSet=${pagination}&limit=10`,getConfig());
+                            dispatch(setIsLoadding(false));
+                            dispatch(setDocuments(documents.data.data));
+                        } catch (error) {
+                            dispatch(setIsLoadding(false));
+                            console.log(error.response.data);
+                            if (error.response.data.message === 'jwt expired') {
+                                localStorage.clear();
+                                dispatch(loggin(false));
+                                navigate("/");
+                            };
+                        };
+                        try {
+                            dispatch(setIsLoadding(true));
+                            const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
+                            dispatch(setIsLoadding(false));
+                            dispatch(setSharedDocuments(documents.data.data));
+                        } catch (error) {
+                            dispatch(setIsLoadding(false));
                             console.log(error.response.data);
                             if (error.response.data.message === 'jwt expired') {
                                 localStorage.clear();
@@ -276,6 +417,34 @@ const NavTop = () => {
                             } catch (error) {
                                 console.log(error.response.data);
                             };
+                            try {
+                                dispatch(setIsLoadding(true));
+                                const documents = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files?offSet=${pagination}&limit=10`,getConfig());
+                                dispatch(setIsLoadding(false));
+                                dispatch(setDocuments(documents.data.data));
+                            } catch (error) {
+                                dispatch(setIsLoadding(false));
+                                console.log(error.response.data);
+                                if (error.response.data.message === 'jwt expired') {
+                                    localStorage.clear();
+                                    dispatch(loggin(false));
+                                    navigate("/");
+                                };
+                            };
+                            try {
+                                dispatch(setIsLoadding(true));
+                                const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
+                                dispatch(setIsLoadding(false));
+                                dispatch(setSharedDocuments(documents.data.data));
+                            } catch (error) {
+                                dispatch(setIsLoadding(false));
+                                console.log(error.response.data);
+                                if (error.response.data.message === 'jwt expired') {
+                                    localStorage.clear();
+                                    dispatch(loggin(false));
+                                    navigate("/");
+                                };
+                            };
                         };
 
                         getSolds(date,resSect.data.section.id);
@@ -306,6 +475,34 @@ const NavTop = () => {
                             } catch (error) {
                                 console.log(error.response.data);
                             };
+                            try {
+                                dispatch(setIsLoadding(true));
+                                const documents = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files?offSet=${pagination}&limit=10`,getConfig());
+                                dispatch(setIsLoadding(false));
+                                dispatch(setDocuments(documents.data.data));
+                            } catch (error) {
+                                dispatch(setIsLoadding(false));
+                                console.log(error.response.data);
+                                if (error.response.data.message === 'jwt expired') {
+                                    localStorage.clear();
+                                    dispatch(loggin(false));
+                                    navigate("/");
+                                };
+                            };
+                            try {
+                                dispatch(setIsLoadding(true));
+                                const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
+                                dispatch(setIsLoadding(false));
+                                dispatch(setSharedDocuments(documents.data.data));
+                            } catch (error) {
+                                dispatch(setIsLoadding(false));
+                                console.log(error.response.data);
+                                if (error.response.data.message === 'jwt expired') {
+                                    localStorage.clear();
+                                    dispatch(loggin(false));
+                                    navigate("/");
+                                };
+                            };
                         };
                         
                         getSoldsUser(date,localStorage.getItem("id"),localStorage.getItem("section"));
@@ -322,7 +519,7 @@ const NavTop = () => {
 
             getArea();
         };
-    },[dispatch,day,month,year,date,navigate]);
+    },[dispatch,day,month,year,date,navigate,pagination]);
 
     const setCampaign = camp=>{
         const date = `${year}-${month}-${day}`;
@@ -397,6 +594,7 @@ const NavTop = () => {
         dispatch(setSections([]));
         dispatch(setSectionSelect({}));
         dispatch(setSolds([]));
+        dispatch(setDocuments([]));
         dispatch(setUgi(false));
         dispatch(loggin(false));
         navigate("/");
