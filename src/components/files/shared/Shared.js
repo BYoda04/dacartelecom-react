@@ -34,7 +34,7 @@ const Shared = () => {
         };
     };
 
-    const searchUSers =async data=>{
+    const searchUsers =async data=>{
         if (data.userName.trim()) {
             try {
                 dispatch(setIsLoadding(true));
@@ -99,7 +99,7 @@ const Shared = () => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <form className='row' onSubmit={handleSubmit(searchUSers)}>
+                            <form className='row' onSubmit={handleSubmit(searchUsers)}>
                                 <div className='row select-area'>
                                     <div className='col-1'></div>
                                     <div className='col-2'>
@@ -112,7 +112,7 @@ const Shared = () => {
                                         <ul className="dropdown-menu" aria-labelledby="dropdownCampaign">
                                             {selectRole?.map(role=>(
                                                 <li key={role.id}>
-                                                    <button className="dropdown-item" onClick={()=>setSelectRol(role)}>{role?.name}</button>
+                                                    <button type='button' className="dropdown-item" onClick={()=>setSelectRol(role)}>{role?.name}</button>
                                                 </li>
                                             ))}
                                         </ul>
@@ -143,7 +143,7 @@ const Shared = () => {
                                                 <div key={user.id} className='user-shared'>
                                                     <div>Nombre: {user.name} {user.lastName}</div>
                                                     <div>
-                                                        <button className='btn btn-success' onClick={()=>shareFile(user.id)}>
+                                                        <button type='button' className='btn btn-success' onClick={()=>shareFile(user.id)}>
                                                             Compartir
                                                             <ion-icon name="document-outline"></ion-icon>
                                                         </button>
@@ -194,7 +194,7 @@ const Shared = () => {
                                         <div className='col-4'>{document?.user?.name} {document?.user?.lastName}</div>
                                         <div className='col-6'>{document?.fileName}.{document?.url.split('.').pop().split('?').shift()}</div>
                                         <div className='col-2 download-btn'>
-                                            <button className={ document?.userId === parseInt(localStorage.getItem('id')) ? 'btn btn-primary' : 'btn btn-primary disabled'} data-bs-toggle="modal" href="#modalSearchUsers" onClick={()=>setFile(document?.id)}>
+                                            <button type='button' className={ document?.userId === parseInt(localStorage.getItem('id')) ? 'btn btn-primary' : 'btn btn-primary disabled'} data-bs-toggle="modal" href="#modalSearchUsers" onClick={()=>setFile(document?.id)}>
                                                 Compartir
                                                 <ion-icon name="arrow-redo-outline"></ion-icon>
                                             </button>

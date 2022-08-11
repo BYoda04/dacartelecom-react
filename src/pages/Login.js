@@ -74,6 +74,14 @@ const Login = () => {
                                     <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                                     <input type="password" className={ errorPassword ? "form-control bad" : "form-control" } id="exampleInputPassword1" {...register('password')}/>
                                 </div>
+                                {
+                                    errorPassword ?
+                                        <div className='margin-top'>
+                                            <p className='bad-text'>Contraseña Incorrecta</p>
+                                        </div>
+                                    :
+                                        <></>
+                                }
                             </div>
                             <div className="modal-footer">
                                 <button className="btn btn-primary">LogIn</button>

@@ -46,6 +46,10 @@ textarea{
   border: 2px solid #b32121;
 }
 
+.bad-text{
+  color: #b32121;
+}
+
 .body-page{
   box-sizing: border-box;
   min-width: 100vw;
@@ -160,4 +164,8 @@ textarea{
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+.margin-top{
+  margin-top: 1rem;
 }
