@@ -16,7 +16,7 @@ const CirclePercent = ({radio,color,percent = 0,size = 1,product,goal}) => {
     const socket = useRef();
 
     useEffect(()=>{
-        socket.current = io('ws://localhost:8001');
+        socket.current = io('ws://server-io-dacartelecom.herokuapp.com/');
     },[]);
 
     useEffect(()=>{

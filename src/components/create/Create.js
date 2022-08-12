@@ -32,7 +32,7 @@ const Create = () => {
     const socket = useRef();
 
     useEffect(()=>{
-        socket.current = io('ws://localhost:8001');
+        socket.current = io('ws://server-io-dacartelecom.herokuapp.com/');
     },[]);
 
     let day = new Date().getDate();
