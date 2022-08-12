@@ -14,7 +14,7 @@ const UgiSolds = ({adviser}) => {
     const socket = useRef();
 
     useEffect(()=>{
-        socket.current = io('ws://server-io-dacartelecom.herokuapp.com/');
+        socket.current = io('ws://superb-unicorn-0b14c0.netlify.app/');
     },[]);
 
     useEffect(()=>{
