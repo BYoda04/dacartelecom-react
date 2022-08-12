@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Dacar from '../../img/dacartelecom-logo.webp';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +24,7 @@ import { setSharedDocuments } from '../../store/slices/sharedDocuments.slice';
 import { useForm } from 'react-hook-form';
 import { setSuccessOrError } from '../../store/slices/successOrError.slice';
 import { setPagination } from '../../store/slices/pagination.slice';
+import { io } from 'socket.io-client';
 
 const NavTop = () => {
 
@@ -71,6 +72,27 @@ const NavTop = () => {
         passwordCreate: '',
         passwordRepeat: ''
     };
+
+    //sockets
+    const socket = useRef();
+
+    useEffect(()=>{
+        socket.current = io('ws://localhost:8001');
+    },[]);
+
+    useEffect(()=>{
+        socket.current.on('newGoal',section=>{
+            if (selectSect?.id === parseInt(section)) {
+                dispatch(getGoals(date,section));
+            }
+        });
+
+        socket.current.on('newSale', section=>{
+            if (selectSect?.id === parseInt(section)) {
+                dispatch(getSolds(date,section));  
+            };
+        });
+    },[dispatch,date,selectSect?.id]);
 
     useEffect(()=>{
         dispatch(setRole(localStorage.getItem("role")));

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDocuments } from '../../../store/slices/documents.slice';
@@ -7,6 +7,7 @@ import { setIsLoadding } from '../../../store/slices/isLoadding.slice';
 import { getSharedDocuments } from '../../../store/slices/sharedDocuments.slice';
 import { setSuccessOrError } from '../../../store/slices/successOrError.slice';
 import getConfig from '../../../utils/getConfig';
+import { io } from 'socket.io-client';
 
 const Shared = () => {
 
@@ -23,6 +24,13 @@ const Shared = () => {
     const { register, handleSubmit } = useForm();
     const dispatch = useDispatch();
     const validRoles = ['administrador','marketing','contador'];
+
+    //sockets
+    const socket = useRef();
+
+    useEffect(()=>{
+        socket.current = io('ws://localhost:8001');
+    },[]);
 
     useEffect(()=>{
         setActualDocuments(documents);
@@ -77,6 +85,7 @@ const Shared = () => {
             const res = await axios.patch(`https://api-dacartelecom.herokuapp.com/api/v1/files/update/${file}`,body,getConfig());
             dispatch(setIsLoadding(false));
             dispatch(setSuccessOrError('success'));
+            socket.current.emit('sendFile',id);
             console.log(res);
         } catch (error) {
             dispatch(setIsLoadding(false));
@@ -88,6 +97,16 @@ const Shared = () => {
             dispatch(setSuccessOrError(''));
         }, 1500);
     };
+
+    useEffect(()=>{
+
+        socket.current.on('reciveFile',id=>{
+            if (id === parseInt(localStorage.getItem('id'))) {
+              dispatch(getSharedDocuments());  
+            };
+        });
+
+    },[dispatch]);
 
     const downloadFile =async id=>{
         try {

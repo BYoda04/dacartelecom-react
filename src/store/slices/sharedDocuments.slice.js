@@ -12,19 +12,15 @@ export const sharedDocumentsSlice = createSlice({
 
 export const { setSharedDocuments } = sharedDocumentsSlice.actions;
 
-export const getSharedDocuments = () => (dispatch) => {
+export const getSharedDocuments = () =>async (dispatch) => {
     let proob = getConfig()
     if (proob.headers.Authorization !== "Bearer null") {
-        const getDocs =async ()=>{
-            try {
-                const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission`,getConfig());
-                dispatch(setSharedDocuments(res.data.data));
-            } catch (error) {
-                console.log(error.response.data);
-            };
+        try {
+            const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission`,getConfig());
+            dispatch(setSharedDocuments(res.data.data));
+        } catch (error) {
+            console.log(error.response.data);
         };
-
-        getDocs();
     };
 };
 
