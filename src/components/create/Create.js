@@ -32,7 +32,7 @@ const Create = () => {
     const socket = useRef();
 
     useEffect(()=>{
-        socket.current = io('ws:https://superb-unicorn-0b14c0.netlify.app/');
+        socket.current = io('ws:https://server-io-dacartelecom.herokuapp.com/');
     },[]);
 
     let day = new Date().getDate();
