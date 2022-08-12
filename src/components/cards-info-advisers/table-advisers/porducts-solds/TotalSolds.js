@@ -14,7 +14,7 @@ const TotalSolds = ({adviser}) => {
     const socket = useRef();
 
     useEffect(()=>{
-        socket.current = io('ws://superb-unicorn-0b14c0.netlify.app/');
+        socket.current = io('ws:https://superb-unicorn-0b14c0.netlify.app/');
     },[]);
 
     useEffect(()=>{
