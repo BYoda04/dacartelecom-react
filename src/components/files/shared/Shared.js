@@ -1,24 +1,36 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { getDocuments } from '../../../store/slices/documents.slice';
 import { setIsLoadding } from '../../../store/slices/isLoadding.slice';
-import { setSharedDocuments } from '../../../store/slices/sharedDocuments.slice';
+import { getSharedDocuments } from '../../../store/slices/sharedDocuments.slice';
 import { setSuccessOrError } from '../../../store/slices/successOrError.slice';
 import getConfig from '../../../utils/getConfig';
 
 const Shared = () => {
 
-    const [documents,setDocuments] = useState([]);
+    const roles = useSelector(state=>state.roles);
+    const documents = useSelector(state=>state.documents);
+    const sharedDocuments = useSelector(state=>state.sharedDocuments);
+    const [actualDocuments,setActualDocuments] = useState([]);
+    const [page,setPage] = useState(0);
+    const [limit] = useState(10);
     const [file,setFile] = useState();
     const [users,setUSers] = useState([]);
     const [selectRol,setSelectRol] = useState({name:'Area'});
     const selectRole = [];
     const { register, handleSubmit } = useForm();
-    const roles = useSelector(state=>state.roles);
-    const sharedDocuments = useSelector(state=>state.sharedDocuments);
     const dispatch = useDispatch();
     const validRoles = ['administrador','marketing','contador'];
+
+    useEffect(()=>{
+        setActualDocuments(documents);
+    },[documents]);
+    
+    useEffect(()=>{
+        dispatch(getDocuments(page,limit));
+    },[dispatch,page,limit]);
 
     const search =async data=>{
         if (data.name.trim()) {
@@ -26,11 +38,18 @@ const Shared = () => {
                 dispatch(setIsLoadding(true));
                 const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/files/get/querys?name=${data.name.trim()}`,getConfig());
                 dispatch(setIsLoadding(false));
-                setDocuments(res.data.data);
+                setActualDocuments(res.data.data);
             } catch (error) {
                 console.log(error.response.data);
                 dispatch(setIsLoadding(false));      
             };
+        };
+    };
+
+    const reset = (value)=>{
+        if (!value.trim()) {
+            setPage(0);
+            dispatch(getDocuments(0,limit));
         };
     };
 
@@ -73,12 +92,22 @@ const Shared = () => {
     const downloadFile =async id=>{
         try {
             await axios.delete(`https://api-dacartelecom.herokuapp.com/api/v1/files/permission/${id}`,getConfig());
-            const documents = await axios.get('https://api-dacartelecom.herokuapp.com/api/v1/files/get/permission',getConfig());
-            dispatch(setSharedDocuments(documents.data.data));
+            dispatch(getSharedDocuments());
         } catch (error) {
-            dispatch(setSharedDocuments([]));
             console.log(error.response.data);
         }
+    };
+
+    const last = ()=>{
+        if (page > 0) {
+            setPage(page - 10);
+        };
+    };
+
+    const next = ()=>{
+        if (documents?.length >= limit) {
+            setPage(page + 10);
+        };
     };
 
     roles.map(role=>{
@@ -169,7 +198,7 @@ const Shared = () => {
                         <label className='form-label'>Nombre del Archivo:</label>
                     </div>
                     <div className='col-2'>
-                        <input className='form-control' type='text' {...register('name')}/>
+                        <input className='form-control' type='text' {...register('name')} onChange={(e)=>reset(e.target.value)}/>
                     </div>
                     <div className='col-2'>
                         <button className='btn btn-primary'>Buscar</button>
@@ -177,11 +206,21 @@ const Shared = () => {
                 </form>
             </div>
             <div className='download-container'>
+                <div className='nav-pagination'>
+                    <div className={ page ? 'button-pagination' : 'button-pagination disabled' } onClick={()=>last()}>
+                        <ion-icon name="arrow-back-outline"></ion-icon>
+                        Anterior
+                    </div>
+                    <div className={ actualDocuments?.length >= limit ? 'button-pagination' : 'button-pagination disabled' } onClick={()=>next()}>
+                        Siguiente
+                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                    </div>
+                </div>
                 <div className='row'>
                     <h2>Mis Archivos</h2>
                 </div>
                 {
-                    documents.length ?
+                    actualDocuments.length ?
                         <>
                             <div className='row'>
                                 <div className='col-4 strong'>Usuario</div>
@@ -189,7 +228,7 @@ const Shared = () => {
                                 <div className='col-2 download-btn strong'>Compartir</div>
                             </div>
                             {
-                                documents?.map(document=>(  
+                                actualDocuments?.map(document=>(  
                                     <div className='row' key={document?.id}>
                                         <div className='col-4'>{document?.user?.name} {document?.user?.lastName}</div>
                                         <div className='col-6'>{document?.fileName}.{document?.url.split('.').pop().split('?').shift()}</div>

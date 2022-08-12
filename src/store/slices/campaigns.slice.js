@@ -14,12 +14,12 @@ export const campaignsSlice = createSlice({
 
 export const { setCampaigns } = campaignsSlice.actions;
 
-export const getCampaigns = (campaign) =>async (dispatch) => {
+export const getCampaigns = () =>async (dispatch) => {
     const valid = getConfig();
     if (valid.headers.Authorization !== "Bearer null") {
         try {
-            if (campaign) {
-                const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/campaigns/${campaign}`,getConfig());
+            if (localStorage.getItem('campaign')) {
+                const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/campaigns/${localStorage.getItem('campaign')}`,getConfig());
                 dispatch(setCampaigns([res.data.campaign]));
             } else {
                 const res = await axios.get("https://api-dacartelecom.herokuapp.com/api/v1/campaigns",getConfig());

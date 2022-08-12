@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setRole } from '../../store/slices/role.slice';
 import { getCampaigns, setCampaigns } from '../../store/slices/campaigns.slice';
-import { getSections, getSectionsUser, setSections } from '../../store/slices/sections.slice';
+import { getSections, setSections } from '../../store/slices/sections.slice';
 import { getAdvisers, setAdvisers } from '../../store/slices/advisers.slice';
 import { getProducts, setProducts } from '../../store/slices/products.slice';
 import { getSolds, setSolds } from '../../store/slices/solds.slice';
@@ -74,32 +74,21 @@ const NavTop = () => {
 
     useEffect(()=>{
         dispatch(setRole(localStorage.getItem("role")));
-        if (!localStorage.getItem('campaign')) {
-            dispatch(getRoles());
-            dispatch(getCampaigns());
-        } else {
-            dispatch(getCampaigns(localStorage.getItem('campaign')));
-        };
+        dispatch(getRoles());
+        dispatch(getCampaigns());
     },[dispatch]);
 
     useEffect(()=>{
-        if (!localStorage.getItem('campaign')) {
-            dispatch(getSections(campaigns[0]));
-        } else {
-            dispatch(getSectionsUser());
-        };
+        dispatch(getSections(campaigns[0]?.id));
+        dispatch(getProducts(campaigns[0]?.sections[0]?.id));
+        dispatch(getAdvisers(campaigns[0]?.sections[0]?.id));
         setSelectCamp(campaigns[0]?.name);
         setSelectSect(campaigns[0]?.sections[0]);
         setUserCamp(campaigns[0]);
         setOptionsSect(campaigns[0]?.sections);
         setUserSect(campaigns[0]?.sections[0]);
+        campaigns[0]?.sections[0]?.name?.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
     },[dispatch,campaigns]);
-
-    useEffect(()=>{
-        dispatch(getProducts(sections[0]));
-        setSelectSect(sections[0]);
-        sections[0]?.name?.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
-    },[dispatch,sections]);
 
     useEffect(()=>{
         dispatch(setDates({
@@ -108,43 +97,31 @@ const NavTop = () => {
         }));
         dispatch(getSolds(date,selectSect?.id));
         dispatch(getGoals(date,selectSect?.id));
-        if (!localStorage.getItem('campaign')) {
-            if (role !== 'supervisor') {
-                dispatch(getAdvisers(selectSect?.id));
-                dispatch(getInvestments(date,selectSect?.id));
-            } else {
-                dispatch(getAdvisers(localStorage.getItem('section')));
-            };
-        } else {
-            dispatch(getInvestments(date,selectSect?.id));
-            dispatch(getAdvisers(localStorage.getItem('section')));
-            dispatch(setSectionSelect(selectSect));
-        };
-    },[dispatch,date,selectSect,role]);
+        dispatch(getInvestments(date,selectSect?.id));
+    },[dispatch,date,selectSect]);
 
     const setCampaign = camp=>{
-        console.log(date);
         dispatch(setSections(camp.sections));
         dispatch(setSectionSelect(camp.sections[0]));
-        setSelectCamp(camp.name);
-        setSelectSect(camp.sections[0]);
-        camp.sections[0].name.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
+        dispatch(getProducts(camp.sections[0].id));
         dispatch(getSolds(date,camp.sections[0].id));
         dispatch(getGoals(date,camp.sections[0].id));
         dispatch(getInvestments(date,camp.sections[0].id));
         dispatch(getAdvisers(camp.sections[0]?.id));
+        setSelectCamp(camp.name);
+        setSelectSect(camp.sections[0]);
+        camp.sections[0].name.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
     };
 
     const setSect = sect=>{
-        console.log(date);
-        dispatch(getProducts(sect));
         dispatch(setSectionSelect(sect));
-        setSelectSect(sect);
-        sect.name.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
+        dispatch(getProducts(sect.id));
         dispatch(getSolds(date,sect.id));
         dispatch(getGoals(date,sect.id));
         dispatch(getInvestments(date,sect.id));
         dispatch(getAdvisers(sect.id));
+        setSelectSect(sect);
+        sect.name.toLowerCase().includes('hogar') ? dispatch(setUgi(true)) : dispatch(setUgi(false));
     };
 
     const endDate = (end)=>{

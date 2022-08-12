@@ -17,11 +17,21 @@ export const getGoals= (start,section,end) =>async (dispatch) => {
     if (valid.headers.Authorization !== "Bearer null") {
         try {
             if (end) {
-                const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&finishDate=${end}&sectionId=${section}`,getConfig());
-                dispatch(setGoals(res.data.goals));
+                if (localStorage.getItem('section')) {
+                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&finishDate=${end}&sectionId=${localStorage.getItem('section')}`,getConfig());
+                    dispatch(setGoals(res.data.goals));
+                } else {
+                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&finishDate=${end}&sectionId=${section}`,getConfig());
+                    dispatch(setGoals(res.data.goals));
+                };
             } else {
-                const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&sectionId=${section}`,getConfig());
-                dispatch(setGoals(res.data.goals));
+                if (localStorage.getItem('section')) {
+                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&sectionId=${localStorage.getItem('section')}`,getConfig());
+                    dispatch(setGoals(res.data.goals));
+                } else {
+                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/goals/get/querys?startDate=${start}&sectionId=${section}`,getConfig());
+                    dispatch(setGoals(res.data.goals));
+                };
             };
         } catch (error) {
             dispatch(setGoals([]));

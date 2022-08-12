@@ -17,19 +17,29 @@ export const getSolds = (start,section,end) =>async (dispatch) => {
     if (valid.headers.Authorization !== "Bearer null") {
         try {
             if (end) {
-                if (localStorage.getItem('role') !== 'asesor') {
-                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&finishDate=${end}&sectionId=${section}`,getConfig());
-                    dispatch(setSolds(res.data.sales));
+                if (localStorage.getItem('section')) {
+                    if (localStorage.getItem('role') !== 'asesor') {
+                        const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&finishDate=${end}&sectionId=${localStorage.getItem('section')}`,getConfig());
+                        dispatch(setSolds(res.data.sales));
+                    } else {
+                        const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&finishDate=${end}&userId=${localStorage.getItem('id')}`,getConfig());
+                        dispatch(setSolds(res.data.sales));
+                    };
                 } else {
-                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&finishDate=${end}&userId=${localStorage.getItem('id')}`,getConfig());
+                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&finishDate=${end}&sectionId=${section}`,getConfig());
                     dispatch(setSolds(res.data.sales));
                 };
             } else {
-                if (localStorage.getItem('role') !== 'asesor') {
-                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&sectionId=${section}`,getConfig());
-                    dispatch(setSolds(res.data.sales));
+                if (localStorage.getItem('section')) {
+                    if (localStorage.getItem('role') !== 'asesor') {
+                        const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&sectionId=${localStorage.getItem('section')}`,getConfig());
+                        dispatch(setSolds(res.data.sales));
+                    } else {
+                        const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&userId=${localStorage.getItem('id')}`,getConfig());
+                        dispatch(setSolds(res.data.sales));
+                    };
                 } else {
-                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&userId=${localStorage.getItem('id')}`,getConfig());
+                    const res = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${start}&sectionId=${section}`,getConfig());
                     dispatch(setSolds(res.data.sales));
                 };
             };
