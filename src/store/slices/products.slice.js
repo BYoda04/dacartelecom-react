@@ -10,4 +10,8 @@ export const productsSlice = createSlice({
 
 export const { setProducts } = productsSlice.actions;
 
+export const getProducts = (section) =>async (dispatch) => {
+    dispatch(setProducts(section.products));
+};
+
 export default productsSlice.reducer;

@@ -20,6 +20,7 @@ const CirclePercent = ({radio,color,percent = 0,size = 1,product,goal}) => {
                             const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&productId=${product.id}`,getConfig());
                             setSolds(data.data.sales);
                         } catch (error) {
+                            setSolds([]);
                             console.log(error.response.data);
                         }
                     }
@@ -31,6 +32,7 @@ const CirclePercent = ({radio,color,percent = 0,size = 1,product,goal}) => {
                             const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&finishDate=${date?.endDate}&productId=${product.id}`,getConfig());
                             setSolds(data.data.sales);
                         } catch (error) {
+                            setSolds([]);
                             console.log(error.response.data);
                         }
                     }
@@ -44,6 +46,7 @@ const CirclePercent = ({radio,color,percent = 0,size = 1,product,goal}) => {
                             const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&userId=${advisers[0]?.id}&productId=${product.id}`,getConfig());
                             setSolds(data.data.sales);
                         } catch (error) {
+                            setSolds([]);
                             console.log(error.response.data);
                         }
                     }
@@ -55,6 +58,7 @@ const CirclePercent = ({radio,color,percent = 0,size = 1,product,goal}) => {
                             const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&finishDate=${date?.endDate}&userId=${advisers[0]?.id}&productId=${product.id}`,getConfig());
                             setSolds(data.data.sales);
                         } catch (error) {
+                            setSolds([]);
                             console.log(error.response.data);
                         }
                     }

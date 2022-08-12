@@ -17,6 +17,7 @@ const ProductsSolds = ({product,adviser}) => {
                     const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&productId=${product?.id}&userId=${adviser?.id}`,getConfig());
                     setSolds(data.data.sales);
                 } catch (error) {
+                    setSolds([]);
                     console.log(error.response.data);
                 }
             }
@@ -29,6 +30,7 @@ const ProductsSolds = ({product,adviser}) => {
                     const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&finishDate=${date?.endDate}&productId=${product?.id}&userId=${adviser?.id}`,getConfig());
                     setSolds(data.data.sales);
                 } catch (error) {
+                    setSolds([]);
                     console.log(error.response.data);
                 }
             }

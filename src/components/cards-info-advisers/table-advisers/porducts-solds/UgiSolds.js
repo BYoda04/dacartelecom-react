@@ -16,6 +16,7 @@ const UgiSolds = ({adviser}) => {
                     const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&userId=${adviser?.id}`,getConfig());
                     setSolds(data.data.sales);
                 } catch (error) {
+                    setSolds([]);
                     console.log(error.response.data);
                 }
             }
@@ -27,6 +28,7 @@ const UgiSolds = ({adviser}) => {
                     const data = await axios.get(`https://api-dacartelecom.herokuapp.com/api/v1/solds/get/querys?startDate=${date?.startDate}&finishDate=${date?.endDate}&userId=${adviser?.id}`,getConfig());
                     setSolds(data.data.sales);
                 } catch (error) {
+                    setSolds([]);
                     console.log(error.response.data);
                 }
             }
