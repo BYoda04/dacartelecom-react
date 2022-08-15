@@ -78,7 +78,7 @@ const NavTop = () => {
     const socket = useRef();
 
     useEffect(()=>{
-        socket.current = io('https://server-io-dacartelecom.herokuapp.com/');
+        socket.current = io('https://api-dacartelecom.herokuapp.com');
     },[]);
 
     useEffect(()=>{

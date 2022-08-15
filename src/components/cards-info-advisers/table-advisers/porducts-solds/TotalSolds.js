@@ -15,7 +15,7 @@ const TotalSolds = ({adviser}) => {
     const socket = useRef();
 
     useEffect(()=>{
-        socket.current = io('ws:https://server-io-dacartelecom.herokuapp.com/');
+        socket.current = io('https://api-dacartelecom.herokuapp.com');
     },[]);
 
     useEffect(()=>{
